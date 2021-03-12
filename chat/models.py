@@ -38,3 +38,5 @@ class Response(models.Model):
             statement if len(statement) <= 20 else statement[:17] + '...',
             response if len(response) <= 40 else response[:37] + '...'
         )
+
+
