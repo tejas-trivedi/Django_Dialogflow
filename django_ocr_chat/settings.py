@@ -25,7 +25,7 @@ SECRET_KEY = 'g@&pad17(8_4$h_f@ck(ge@@=)ihq)#f01l-n11zxm=8bxxn&r'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -56,7 +56,7 @@ ROOT_URLCONF = 'django_ocr_chat.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'chat/templates'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -115,8 +115,28 @@ USE_L10N = True
 
 USE_TZ = True
 
+CORS_ORIGIN_WHITELIST = ["*"]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+DEFAULT_FILE_STORAGE = 'django_gcloud_storage.DjangoGCloudStorage'
+
+GCS_PROJECT = 'django-dialogflow-307207'
+"""GCS_BUCKET = '<YOUR-GCS-BUCKET-NAME>'
+GCS_CREDENTIALS_FILE_PATH = os.path.join(BASE_DIR, '<YOUR JSON GCP CREDENTIALS FILE>')
+GCS_USE_UNSIGNED_URLS = True
+
+DEFAULT_FILE_STORAGE = 'django_gcloud_storage.DjangoGCloudStorage'
+STATICFILES_STORAGE = 'django_gcloud_storage.DjangoGCloudStorage'
+GS_PROJECT_ID = '<YOUR-GCP-PROJECT-ID>'
+GS_MEDIA_BUCKET_NAME = '<YOUR-GCS-BUCKET-NAME-MEDIA>'
+GS_STATIC_BUCKET_NAME = '<YOUR-GCS-BUCKET-NAME-STATIC>'
+STATIC_URL = 'https://storage.googleapis.com/{}/'.format(GS_STATIC_BUCKET_NAME)
+MEDIA_URL = 'https://storage.googleapis.com/{}/'.format(GS_MEDIA_BUCKET_NAME)"""
+
+
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_URL = '/media/'
