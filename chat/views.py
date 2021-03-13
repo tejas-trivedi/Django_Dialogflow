@@ -9,3 +9,16 @@ import os
 import json
 from google.cloud import storage
 
+@require_http_methods(['GET'])
+def index_view(request):
+    return render(request, 'home.html')
+
+def convert(data):
+    if isinstance(data, bytes):
+        return data.decode('ascii')
+    if isinstance(data, dict):
+        return dict(map(convert, data.items()))
+    if isinstance(data, tuple):
+        return map(convert, data)
+
+    return data
