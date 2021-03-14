@@ -42,7 +42,7 @@ def chat_view(request):
 
         input_dict = convert(request.body)
         input_text = json.loads(input_dict)['text']
-        print('input_text is: ', input_text)
+        print('input_text: ', input_text)
         input_value = input_text
     
     else:
@@ -50,7 +50,7 @@ def chat_view(request):
         print('file is', file_input)
         file_name = upload_blob('as-testing-bucket', request.FILES['file'], request.FILES['file'].name)
         input_value = 'file is '+ file_name
-        print('text is: ', input_value)
+        print('text: ', input_value)
 
     context_name = "projects/" + GOOGLE_PROJECT_ID + "/agent/sessions/" + session_id + "/contexts/" + \
                context_short_name.lower()
@@ -77,3 +77,53 @@ def chat_view(request):
 
     #return httpresponse received from the detectintent API
     return HttpResponse(response.query_result.fulfillment_text, status=200)
+
+
+
+
+## Function to upload the file in GCS 
+def upload_blob(bucket_name, source_file_name, destination_blob_name):
+    """Uploads a file to the bucket."""
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(bucket_name)
+    blob = bucket.blob(destination_blob_name)
+    blob.upload_from_file(source_file_name)
+
+    print('File {} uploaded to {}.'.format(
+        source_file_name,
+        destination_blob_name))
+    return destination_blob_name
+
+## to call Dialogflow detectintent API endpoint
+def detect_intent_with_parameters(project_id, session_id, query_params, language_code, user_input):
+
+    session_client = dialogflow.SessionsClient()
+
+    session = session_client.session_path(project_id, session_id)
+    print('Session path: {}\n'.format(session))
+
+    text = user_input
+
+    text_input = dialogflow.types.TextInput(
+        text=text, language_code=language_code)
+
+    query_input = dialogflow.types.QueryInput(text=text_input)
+
+    response = session_client.detect_intent(
+        session=session, query_input=query_input,
+        query_params=query_params
+    )
+
+    print('=' * 20)
+    print('Query text: {}'.format(response.query_result.query_text))
+    print('Detected intent: {} (confidence: {})\n'.format(
+        response.query_result.intent.display_name,
+        response.query_result.intent_detection_confidence))
+    print('Fulfillment text: {}\n'.format(
+        response.query_result.fulfillment_text))
+
+    return response
+    
+
+def about(request):
+    return render(request, 'about.html')

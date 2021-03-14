@@ -4,3 +4,8 @@ env
 **migrations
 
 **__pycache__
+
+agent.json
+cloud_sql_proxy
+
+fulfillment.js
